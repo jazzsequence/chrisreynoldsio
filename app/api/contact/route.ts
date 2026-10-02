@@ -58,7 +58,9 @@ export async function POST(req: Request) {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO } = process.env;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
     console.error("[contact] SMTP is not configured (SMTP_HOST/SMTP_USER/SMTP_PASS)");
-    return fail("The contact form isn't available right now.", 503);
+    // 500 rather than 503: Pantheon's gateway replaces origin 502/503/504 responses with its own
+    // non-JSON error page, which hides this message and shows the form's generic fallback.
+    return fail("The contact form isn't available right now.", 500);
   }
 
   const port = Number(SMTP_PORT) || 465;
@@ -82,7 +84,9 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("[contact] send failed:", (err as Error).message);
-    return fail("Couldn't send your message. Please try again later.", 502);
+    const e = err as Error & { code?: string; responseCode?: number };
+    console.error("[contact] send failed:", e.code ?? "", e.responseCode ?? "", e.message);
+    // 500, not 502: see the note above about the gateway swallowing 502/503/504 bodies.
+    return fail("Couldn't send your message. Please try again later.", 500);
   }
 }
