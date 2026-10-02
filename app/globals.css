@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --muted: #3333333;
+  --border: #e5e5e5;
+  --surface: #fafafa;
+  --btn-bg: rgb(255, 220, 40);
+  --btn-fg: #00000;
+  --btn-outline-bg: transparent;
+  --btn-outline-fg: #171717;
+  --btn-outline-border: #d4d4d4;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-btn-bg: var(--btn-bg);
+  --color-btn-fg: var(--btn-fg);
+  --color-btn-outline-bg: var(--btn-outline-bg);
+  --color-btn-outline-fg: var(--btn-outline-fg);
+  --color-btn-outline-border: var(--btn-outline-border);
+  --font-sans: var(--font-poppins-sans);
+  --font-mono: var(--font-source-code-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}

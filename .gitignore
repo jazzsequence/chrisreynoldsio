@@ -1,0 +1,5 @@
+node_modules
+.DS_Store
+.next/*
+.cache
+next-env.d.ts
