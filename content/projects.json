@@ -103,5 +103,12 @@
     "url": "https://binaryjazz.us",
     "description": "Music, code, and whatever else is going on.",
     "tags": ["Web"]
+  },
+  {
+    "slug": "music",
+    "title": "Music",
+    "url": "https://music.jazzsequence.com",
+    "description": "Sometimes I make sounds.",
+    "tags": ["Music", "Writing"]
   }
 ]
