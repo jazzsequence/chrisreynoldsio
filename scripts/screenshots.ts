@@ -9,12 +9,12 @@
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { chromium } from "playwright";
+import { chromium, type Page } from "playwright";
 import sharp from "sharp";
 
 // `image` (optional): a remote URL to download instead of screenshotting. A local path under
 // public/ is used as-is by the site and skipped here.
-type Project = { slug: string; url: string; image?: string };
+type Project = { slug: string; url: string; image?: string; dismiss?: string };
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "public", "shots");
@@ -25,6 +25,23 @@ const only = new Set(process.argv.slice(2));
 // ("header x-screenshot-token equals <secret>" -> action: Skip managed challenge / bot fight)
 // and set SCREENSHOT_TOKEN so this script is let through. We don't try to evade challenges.
 const TOKEN = process.env.SCREENSHOT_TOKEN;
+
+// Consent banners: we only ever pick the privacy-preserving choice (reject / necessary only) and
+// never "Accept all". The click only affects this throwaway browser context. A project can set
+// `dismiss` to the exact label of the button to press when the banner uses unusual wording.
+const REJECT = /^\s*(accept necessary( cookies)? only|necessary( cookies)? only|only (accept )?(necessary|essential)( cookies)?|reject( all( cookies)?)?|decline( all)?|deny( all)?|essential( cookies)? only|no,? thanks)\s*$/i;
+
+async function dismissConsent(page: Page, label?: string): Promise<boolean> {
+  const name = label ? new RegExp(`^\\s*${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "i") : REJECT;
+  const button = page.getByRole("button", { name }).first();
+  try {
+    await button.click({ timeout: 2500 });
+    await page.waitForTimeout(900); // let the banner's exit animation finish
+    return true;
+  } catch {
+    return false; // no banner (or none we recognise): nothing to do
+  }
+}
 
 // Text that means we got a bot-check/interstitial page instead of the real site.
 const CHALLENGE = /just a moment|verify you are human|attention required|checking your browser|enable javascript and cookies|security check|performing security verification/i;
@@ -71,6 +88,8 @@ for (const p of projects) {
     await page.waitForLoadState("networkidle", { timeout: 10_000 }).catch(() => {});
     // Let webfonts/animations settle; idle alone misses late paints.
     await page.waitForTimeout(1500);
+    const dismissed = await dismissConsent(page, p.dismiss);
+    if (dismissed) console.log(`      dismissed a consent banner on ${p.slug}`);
     const probe = `${await page.title()} ${(await page.locator("body").innerText({ timeout: 3000 }).catch(() => "")).slice(0, 600)}`;
     if (CHALLENGE.test(probe)) {
       throw new Error("bot-check/interstitial page (Cloudflare?), not saving");
