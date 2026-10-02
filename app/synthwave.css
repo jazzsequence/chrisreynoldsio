@@ -500,6 +500,7 @@
   display: grid;
   gap: 1.1rem;
   max-width: 40rem;
+  margin-inline: auto; /* centred in the container; the width cap keeps lines readable */
   padding: clamp(1.25rem, 3vw, 2rem);
   border: 1px solid var(--sw-border);
   border-radius: var(--sw-radius);
