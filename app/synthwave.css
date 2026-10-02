@@ -1,0 +1,598 @@
+/*
+ * Synthwave design system for chrisreynolds.io.
+ *
+ * Everything is scoped under `.sw-root` (applied by puckRoot in components/puck/root.tsx),
+ * never to <body>: the P1 editor chrome shares this stylesheet and Puck copies host styles
+ * into its canvas iframe, so a bare body rule would restyle the editor UI.
+ *
+ * Layers: tokens -> base -> components. Blocks use only `.sw-*` classes and `var(--sw-*)`
+ * tokens, so re-theming means editing the token block below and nothing else.
+ */
+
+.sw-root {
+  /* Surfaces: deep indigo-black, stepped lighter for elevation */
+  --sw-bg: #0b0616;
+  --sw-surface: #130a26;
+  --sw-surface-2: #1c0f3a;
+  --sw-border: #3a1d6e;
+
+  /* Text. Muted is >= 7:1 on --sw-bg, so it is safe for body copy. */
+  --sw-text: #efe7ff;
+  --sw-muted: #a79bc9;
+
+  /* Neon accents. Pink is for emphasis and large type; cyan carries links and focus. */
+  --sw-pink: #ff2e97;
+  --sw-cyan: #00e5ff;
+  --sw-purple: #9d4edd;
+  --sw-amber: #ffb86b;
+
+  /* Glow recipes, so intensity is tuned in one place */
+  --sw-glow-pink: 0 0 6px rgb(255 46 151 / 0.7), 0 0 24px rgb(255 46 151 / 0.45);
+  --sw-glow-cyan: 0 0 6px rgb(0 229 255 / 0.7), 0 0 24px rgb(0 229 255 / 0.4);
+
+  --sw-font-display: "Oxanium Variable", ui-sans-serif, system-ui, sans-serif;
+  --sw-font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --sw-font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+
+  --sw-radius: 0.75rem;
+  --sw-max: 72rem;
+
+  position: relative;
+  min-height: 100vh;
+  color: var(--sw-text);
+  font-family: var(--sw-font-body);
+  line-height: 1.65;
+  background:
+    radial-gradient(60rem 30rem at 85% -10%, rgb(157 78 221 / 0.28), transparent 60%),
+    radial-gradient(50rem 28rem at 0% 20%, rgb(255 46 151 / 0.14), transparent 60%),
+    var(--sw-bg);
+  overflow-x: clip;
+}
+
+/* CRT scanlines: purely decorative, very low opacity, never intercepts input. */
+.sw-root::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0) 0,
+    rgb(0 0 0 / 0) 2px,
+    rgb(0 0 0 / 0.12) 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+.sw-root a {
+  color: var(--sw-cyan);
+  text-underline-offset: 0.2em;
+}
+.sw-root a:hover {
+  text-shadow: var(--sw-glow-cyan);
+}
+
+/* Keyboard focus must be obvious on a dark, busy background. */
+.sw-root :focus-visible {
+  outline: 2px solid var(--sw-cyan);
+  outline-offset: 3px;
+  box-shadow: var(--sw-glow-cyan);
+}
+
+.sw-root :is(h1, h2, h3, h4)[id] {
+  scroll-margin-top: 2rem;
+}
+
+.sw-container {
+  width: min(100% - 2rem, var(--sw-max));
+  margin-inline: auto;
+}
+
+.sw-section {
+  padding-block: clamp(3rem, 8vw, 6rem);
+}
+
+/* Stacking: Section heading -> Text -> content block. Each piece owns only the spacing on its own
+   side, so any order composes without doubled-up gaps. */
+.sw-section--heading {
+  padding-block: clamp(3rem, 7vw, 5rem) 0;
+}
+.sw-section--heading .sw-h2 {
+  margin-bottom: 0.25rem;
+}
+.sw-section--text {
+  padding-block: 0.75rem 0;
+}
+.sw-section--body {
+  padding-block: 1.5rem clamp(2.5rem, 6vw, 4.5rem);
+}
+
+/* ---------- Typography ---------- */
+
+.sw-display {
+  font-family: var(--sw-font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.sw-eyebrow {
+  font-family: var(--sw-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sw-cyan);
+}
+
+.sw-h2 {
+  font-family: var(--sw-font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.5rem;
+}
+
+/* Sunset gradient text. The solid colour is the fallback where background-clip:text is missing. */
+.sw-gradient-text {
+  color: var(--sw-pink);
+  background: linear-gradient(180deg, var(--sw-amber) 0%, var(--sw-pink) 55%, var(--sw-purple) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 18px rgb(255 46 151 / 0.35));
+}
+
+/* ---------- Buttons ---------- */
+
+.sw-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid var(--sw-cyan);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sw-cyan);
+  font-family: var(--sw-font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, color 0.15s;
+}
+.sw-btn:hover {
+  background: var(--sw-cyan);
+  color: var(--sw-bg);
+  box-shadow: var(--sw-glow-cyan);
+  text-shadow: none;
+}
+.sw-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+/* Scoped under .sw-root so these beat the `.sw-root a` link colour (cyan) on <a> buttons.
+   Text uses the page background colour: ~5.9:1 on the magenta fill. */
+.sw-root .sw-btn--primary {
+  border-color: var(--sw-pink);
+  background: var(--sw-pink);
+  color: var(--sw-bg);
+  box-shadow: var(--sw-glow-pink);
+}
+.sw-root .sw-btn--primary:hover {
+  background: transparent;
+  color: var(--sw-pink);
+  box-shadow: var(--sw-glow-pink);
+  text-shadow: none;
+}
+.sw-root .sw-btn:not(.sw-btn--primary):hover {
+  color: var(--sw-bg);
+}
+
+/* ---------- Hero ---------- */
+
+.sw-hero {
+  /* The sun sits entirely below the copy, on the horizon, so text never overlaps it. */
+  --sw-sun: clamp(9rem, 22vw, 16rem);
+  /* Slit centres, % of sun height. The sun mask and the horizon lines both derive from these,
+     so they cannot drift apart. Slit half-heights are in --sw-slit-N below. */
+  --sw-c1: 56.5%;
+  --sw-c2: 72%;
+  --sw-c3: 86.5%;
+  --sw-c4: 97.5%;
+  --sw-h1: 1.5%;
+  --sw-h2: 2%;
+  --sw-h3: 2.5%;
+  --sw-h4: 2.5%;
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(4rem, 10vw, 7rem) calc(var(--sw-sun) + 6.5rem);
+  text-align: center;
+}
+
+.sw-hero__sun {
+  position: absolute;
+  left: 50%;
+  bottom: 3.5rem;
+  z-index: -1;
+  width: var(--sw-sun);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--sw-amber) 0%, var(--sw-pink) 55%, var(--sw-purple) 100%);
+  /* Horizontal slits cut into the lower half: the classic retrowave sun. */
+  --sw-sun-mask: linear-gradient(
+    to bottom,
+    #000 0 calc(var(--sw-c1) - var(--sw-h1)),
+    transparent calc(var(--sw-c1) - var(--sw-h1)) calc(var(--sw-c1) + var(--sw-h1)),
+    #000 calc(var(--sw-c1) + var(--sw-h1)) calc(var(--sw-c2) - var(--sw-h2)),
+    transparent calc(var(--sw-c2) - var(--sw-h2)) calc(var(--sw-c2) + var(--sw-h2)),
+    #000 calc(var(--sw-c2) + var(--sw-h2)) calc(var(--sw-c3) - var(--sw-h3)),
+    transparent calc(var(--sw-c3) - var(--sw-h3)) calc(var(--sw-c3) + var(--sw-h3)),
+    #000 calc(var(--sw-c3) + var(--sw-h3)) calc(var(--sw-c4) - var(--sw-h4)),
+    transparent calc(var(--sw-c4) - var(--sw-h4))
+  );
+  -webkit-mask-image: var(--sw-sun-mask);
+  mask-image: var(--sw-sun-mask);
+  filter: drop-shadow(0 0 40px rgb(255 46 151 / 0.45));
+}
+
+/* Horizon lines: the sun's slits continue outward as thin lines across the full width.
+   Same box as the sun (same bottom + height) so each line sits in a slit of the mask; they fade
+   out toward the page edges. They render behind the sun, so only the slits and the area outside
+   the disc show them. Slit centres mirror the mask stops on .sw-hero__sun. */
+.sw-hero__lines {
+  --sw-line: 2px; /* thickness; each line starts at the TOP edge of its slit */
+  position: absolute;
+  left: 50%;
+  bottom: 3.5rem;
+  z-index: -2;
+  width: min(100%, calc(var(--sw-sun) * 2.4));
+  height: var(--sw-sun);
+  translate: -50% 0;
+  background:
+    linear-gradient(to bottom, transparent calc(var(--sw-c1) - var(--sw-h1)), var(--sw-pink) calc(var(--sw-c1) - var(--sw-h1)) calc(var(--sw-c1) - var(--sw-h1) + var(--sw-line)), transparent calc(var(--sw-c1) - var(--sw-h1) + var(--sw-line))),
+    linear-gradient(to bottom, transparent calc(var(--sw-c2) - var(--sw-h2)), var(--sw-pink) calc(var(--sw-c2) - var(--sw-h2)) calc(var(--sw-c2) - var(--sw-h2) + var(--sw-line)), transparent calc(var(--sw-c2) - var(--sw-h2) + var(--sw-line))),
+    linear-gradient(to bottom, transparent calc(var(--sw-c3) - var(--sw-h3)), var(--sw-purple) calc(var(--sw-c3) - var(--sw-h3)) calc(var(--sw-c3) - var(--sw-h3) + var(--sw-line)), transparent calc(var(--sw-c3) - var(--sw-h3) + var(--sw-line))),
+    linear-gradient(to bottom, transparent calc(var(--sw-c4) - var(--sw-h4)), var(--sw-purple) calc(var(--sw-c4) - var(--sw-h4)) calc(var(--sw-c4) - var(--sw-h4) + var(--sw-line)), transparent calc(var(--sw-c4) - var(--sw-h4) + var(--sw-line)));
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 30%, #000 70%, transparent);
+  filter: drop-shadow(0 0 4px rgb(255 46 151 / 0.7));
+}
+
+/* Perspective floor grid: a tilted plane whose lines converge on the horizon at the top edge.
+   Animated by scrolling the background; stopped for reduced motion. */
+.sw-hero__grid {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: -3;
+  height: 10rem;
+  perspective: 14rem;
+  perspective-origin: 50% 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+}
+.sw-hero__grid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 300%;
+  transform: rotateX(68deg);
+  transform-origin: 50% 0;
+  background-image:
+    linear-gradient(to right, rgb(0 229 255 / 0.7) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(0 229 255 / 0.7) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  animation: sw-grid-scroll 2.4s linear infinite;
+}
+
+@keyframes sw-grid-scroll {
+  to {
+    background-position-y: 4rem;
+  }
+}
+
+.sw-hero__title {
+  font-size: clamp(2.5rem, 9vw, 6rem);
+  margin: 0.5rem 0 1rem;
+}
+.sw-hero__tagline {
+  max-width: 40rem;
+  margin: 0 auto 2rem;
+  color: var(--sw-muted);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+}
+.sw-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Interior hero: the same hero without the sun/grid, so it needs far less bottom room. */
+.sw-hero--plain {
+  padding-block: clamp(3.5rem, 8vw, 6rem) clamp(2rem, 5vw, 3.5rem);
+}
+.sw-hero--plain .sw-hero__title {
+  font-size: clamp(2.25rem, 7vw, 4.5rem);
+}
+
+/* Free-text prose (Text block): spans the full container (no measure cap); tokens for colour, no Tailwind prose. */
+.sw-prose {
+  color: var(--sw-muted);
+  font-size: 1.1rem;
+}
+.sw-prose > :first-child { margin-top: 0; }
+.sw-prose > :last-child { margin-bottom: 0; }
+.sw-prose p { margin: 0 0 1rem; }
+.sw-prose strong { color: var(--sw-text); }
+.sw-prose ul, .sw-prose ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+.sw-prose li { margin: 0.25rem 0; }
+
+/* ---------- Bio ---------- */
+
+.sw-bio {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+}
+@media (min-width: 48rem) {
+  .sw-bio {
+    grid-template-columns: 18rem 1fr;
+    gap: 3rem;
+  }
+  .sw-bio--no-photo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Photo: neon-framed, with a soft duotone wash so any photo sits inside the palette. */
+.sw-bio__photo {
+  position: relative;
+  max-width: 18rem;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--sw-pink);
+  border-radius: var(--sw-radius);
+  background: var(--sw-surface);
+  box-shadow: var(--sw-glow-pink);
+}
+.sw-bio__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sw-bio__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgb(0 229 255 / 0.28), rgb(255 46 151 / 0.32));
+  mix-blend-mode: soft-light;
+}
+
+.sw-bio__body {
+  display: grid;
+  gap: 1rem;
+  font-size: 1.1rem;
+}
+.sw-bio__body p {
+  margin: 0;
+}
+
+/* ---------- Cards / project grid ---------- */
+
+.sw-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+}
+
+.sw-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--sw-border);
+  border-radius: var(--sw-radius);
+  background: var(--sw-surface);
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.sw-card:hover,
+.sw-card:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--sw-pink);
+  box-shadow: var(--sw-glow-pink);
+}
+
+.sw-card__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  /* Visible when a screenshot is missing or still loading. */
+  background:
+    linear-gradient(135deg, var(--sw-surface-2), var(--sw-bg)),
+    var(--sw-surface-2);
+  border-bottom: 1px solid var(--sw-border);
+}
+.sw-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.sw-card__fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  font-family: var(--sw-font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--sw-purple);
+}
+
+.sw-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.1rem 1.25rem 1.3rem;
+}
+.sw-card__title {
+  margin: 0;
+  font-family: var(--sw-font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+/* Stretched link: the whole card is clickable but only the title is the accessible link. */
+.sw-card__title a {
+  color: var(--sw-text);
+  text-decoration: none;
+}
+.sw-card__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.sw-card__desc {
+  margin: 0;
+  color: var(--sw-muted);
+  font-size: 0.95rem;
+}
+.sw-card__host {
+  margin-top: auto;
+  font-family: var(--sw-font-mono);
+  font-size: 0.75rem;
+  color: var(--sw-cyan);
+}
+
+.sw-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sw-tag {
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--sw-border);
+  border-radius: 999px;
+  font-family: var(--sw-font-mono);
+  font-size: 0.7rem;
+  color: var(--sw-muted);
+}
+
+/* ---------- Contact form ---------- */
+
+.sw-form {
+  display: grid;
+  gap: 1.1rem;
+  max-width: 40rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--sw-border);
+  border-radius: var(--sw-radius);
+  background: var(--sw-surface);
+}
+.sw-field {
+  display: grid;
+  gap: 0.4rem;
+}
+.sw-label {
+  font-family: var(--sw-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sw-muted);
+}
+.sw-input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--sw-border);
+  border-radius: 0.5rem;
+  background: var(--sw-bg);
+  color: var(--sw-text);
+  font: inherit;
+}
+.sw-input::placeholder {
+  color: color-mix(in srgb, var(--sw-muted) 70%, transparent);
+}
+.sw-input:focus {
+  border-color: var(--sw-cyan);
+}
+textarea.sw-input {
+  min-height: 9rem;
+  resize: vertical;
+}
+.sw-form__status {
+  margin: 0;
+  min-height: 1.5em;
+  font-family: var(--sw-font-mono);
+  font-size: 0.85rem;
+}
+.sw-form__status[data-state="ok"] {
+  color: var(--sw-cyan);
+}
+.sw-form__status[data-state="error"] {
+  color: var(--sw-pink);
+}
+/* Honeypot: off-screen rather than display:none, which some bots detect and skip. */
+.sw-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ---------- Footer ---------- */
+
+.sw-footer {
+  border-top: 1px solid var(--sw-border);
+  padding-block: 2rem;
+  color: var(--sw-muted);
+  font-family: var(--sw-font-mono);
+  font-size: 0.8rem;
+}
+.sw-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.sw-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-hero__grid::before {
+    animation: none;
+  }
+  .sw-card,
+  .sw-btn {
+    transition: none;
+  }
+  .sw-card:hover,
+  .sw-card:focus-within {
+    transform: none;
+  }
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "slug": "next-jazzsequence",
+    "title": "jazzsequence.com (Next)",
+    "url": "https://next.jazzsequence.com",
+    "description": "The headless, Next.js take on my personal site.",
+    "tags": ["Next.js", "Pantheon"]
+  },
+  {
+    "slug": "dragonfly",
+    "title": "Dragonfly",
+    "url": "https://dragonfly.jazzsequence.com/",
+    "description": "A developer blog for Invert, built on Invert and deployed to Cloudflare Pages.",
+    "tags": ["Astro", "Invert", "Cloudflare"]
+  },
+  {
+    "slug": "invert",
+    "title": "Invert",
+    "url": "https://jazzsequence.github.io/Invert/",
+    "description": "A database-less, adapter-driven content presentation layer built on Astro. There is no admin, and that's the point.",
+    "tags": ["Astro", "MCP", "Open source"]
+  },
+  {
+    "slug": "5emcp",
+    "title": "5eMCP",
+    "url": "https://github.com/jazzsequence/5eMCP",
+    "description": "A D&D 5e reference and DM utility MCP server backed by live 5etools data.",
+    "tags": ["MCP", "D&D", "Open source"]
+  },
+  {
+    "slug": "claude-code-reviewer",
+    "title": "Claude Code Reviewer",
+    "url": "https://github.com/jazzsequence/claude-code-reviewer",
+    "description": "An adversarial reviewer workflow that makes Claude Code earn its commits.",
+    "tags": ["Claude Code", "Open source"]
+  },
+  {
+    "slug": "goth-claude",
+    "title": "Goth Claude",
+    "url": "https://github.com/jazzsequence/goth-claude",
+    "description": "Turns Claude Code's spinner into a post-punk death disco.",
+    "tags": ["Claude Code", "Fun"]
+  },
+  {
+    "slug": "communitycode",
+    "title": "Community + Code",
+    "url": "https://communitycode.dev",
+    "description": "A podcast about the people and communities behind the code.",
+    "tags": ["Podcast", "WordPress"]
+  },
+  {
+    "slug": "all-manner-of-hounds",
+    "title": "All Manner of Hounds",
+    "url": "https://allmannerofhounds.com",
+    "description": "1,065 medieval dog names, from a manuscript list, made browsable.",
+    "tags": ["Web", "History"]
+  },
+  {
+    "slug": "actualplaydb",
+    "title": "Actual Play DB",
+    "url": "https://actualplaydb.com",
+    "description": "A database for tabletop actual play.",
+    "tags": ["TTRPG", "Web"]
+  },
+  {
+    "slug": "heretics",
+    "title": "Heretics of the Old Gods",
+    "url": "https://jazzsequence.github.io/heretics-of-the-old-gods/",
+    "description": "A tabletop RPG project, published as a static site.",
+    "tags": ["TTRPG", "Writing"]
+  },
+  {
+    "slug": "homebrewery",
+    "title": "Homebrewery",
+    "url": "https://homebrewery.naturalcrit.com/user/jazzsequence",
+    "description": "My homebrew D&D content, written and published on Homebrewery.",
+    "tags": ["D&D", "Writing"]
+  },
+  {
+    "slug": "dmsguild",
+    "title": "DMs Guild",
+    "url": "https://www.dmsguild.com/browse.php?author=Chris%20Reynolds",
+    "description": "Published adventures and supplements on the DMs Guild.",
+    "tags": ["D&D", "Writing"]
+  },
+  {
+    "slug": "packages",
+    "title": "Packages",
+    "url": "https://packages.jazzsequence.com",
+    "description": "A private Composer package repository for WordPress plugins and themes.",
+    "tags": ["Composer", "WordPress"]
+  },
+  {
+    "slug": "profile",
+    "title": "Profile",
+    "url": "https://jazzsequence.github.io",
+    "description": "All my links in one place: a GitHub Pages profile that replaces linktr.ee.",
+    "tags": ["GitHub Pages", "Open source"]
+  },
+  {
+    "slug": "binaryjazz",
+    "title": "binaryjazz.us",
+    "url": "https://binaryjazz.us",
+    "description": "Music, code, and whatever else is going on.",
+    "tags": ["Web"]
+  }
+]
