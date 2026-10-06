@@ -3,7 +3,6 @@ import {
   createSeoRootFields,
   DEFAULT_EDITOR_ROOT_TITLE,
 } from "@pantheon-systems/puck-css/seo";
-import { SwSiteFooter } from "./sw-site-footer";
 
 /**
  * The root config: this site's own fields, plus the page-metadata fields.
@@ -37,7 +36,6 @@ export const puckRoot = {
     return (
       <div className="sw-root antialiased">
         {children}
-        <SwSiteFooter />
       </div>
     );
   },
