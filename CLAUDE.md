@@ -27,8 +27,9 @@ Run lint, tsc, tests and build before committing.
 
 - `app/synthwave.css`: the design system. Tokens are CSS variables on `.sw-root`; components are `.sw-*` classes. Re-theme by editing the token block only.
 - `app/styles.css`: Tailwind + font imports + the editor-safe `body:has(> .p1-app-shell)` reset (see the comment there before touching it).
-- `components/puck/sw-*.tsx`: our blocks: Hero (sun + grid, home), Hero (interior) (the hero minus sun/grid, via shared `renderHero`), Section heading, Text (rich text), Bio (photo + text), Project grid, Contact form, Footer. **Content blocks carry no heading**: compose Section heading -> Text (optional intro) -> content block. Set the Section heading's Anchor ID to `work` / `contact` so the hero buttons (`#work`, `#contact`) land.
+- `components/puck/sw-*.tsx`: our blocks: Hero (sun + grid, home), Hero (interior) (the hero minus sun/grid, via shared `renderHero`), Section heading, Text (rich text), Bio (photo + text), Project grid, Contact form. **Content blocks carry no heading**: compose Section heading -> Text (optional intro) -> content block. Set the Section heading's Anchor ID to `work` / `contact` so the hero buttons (`#work`, `#contact`) land.
 - `components/puck/root.tsx`: wraps pages in `.sw-root`. The theme is applied here, **not on `<body>`**, because the P1 editor chrome shares the stylesheet and Puck copies host styles into its canvas iframe.
+- **Footer is sitewide, not a block.** `components/puck/sw-site-footer.tsx` renders from `content/footer.json` inside `root.tsx`, so it's identical on every page; edit the JSON and deploy (it is not editable in `/p1`). The old `SwFooter` block is retired (hidden from the palette, renders nothing) so already-saved instances don't double up; delete it once they're removed from pages.
 - `app/api/contact/route.ts`: contact form handler (nodemailer over Gmail SMTP).
 - `content/projects.json`: single source for project cards **and** the screenshot script. `content/shots.json` is generated (which shots exist).
 - `scripts/screenshots.ts`: Playwright, build-time. Run it manually; it is not part of `build`.

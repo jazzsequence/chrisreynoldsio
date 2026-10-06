@@ -35,7 +35,6 @@ export const config = {
         "SwBio",
         "SwProjectGrid",
         "SwContact",
-        "SwFooter",
       ],
       defaultExpanded: true,
     },
