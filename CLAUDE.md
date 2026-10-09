@@ -22,7 +22,8 @@ Run lint, tsc, tests and build before committing.
 - `.github/dependabot.yml`: weekly npm + github-actions updates; npm minor/patch are grouped, majors stay individual PRs.
 - `.github/workflows/ci.yml`: lint, typecheck, test, build on PRs and `main`. The build needs no secrets (verified), which matters because Dependabot PRs can't read repo secrets.
 - `.github/workflows/sync-puck-registry.yml`: pushes the Puck registry to P1 when `puck.config.tsx` or `components/puck/**` change. Needs repo variables `CSS_BASE_URL` and `CSS_SITE_ID`, and repo secret `CSS_REGISTRY_API_KEY` (a `sat_` token minted in the P1 dashboard with only "Component registry sync"). Moved from `ci-examples/`.
-- `@pantheon-systems/pds-toolkit-react` is pinned to an exact alpha; review those bumps by hand.
+- Dependabot ignores (with reasons, in `dependabot.yml`): `eslint`, `@eslint/js` and `typescript` majors (eslint-plugin-import/react have no ESLint 10 release; typescript-eslint caps TS below 6.1), `@types/node` >= 25 (match the Node 24 runtime), and `pds-toolkit-react` (exact-pinned prerelease, bump by hand). Remove the ignores as the plugins catch up.
+- Read localStorage flags with `lib/use-local-storage-flag.ts`, not setState in an effect: react-hooks v7 flags that (`set-state-in-effect`).
 
 ## Where content lives (important)
 
