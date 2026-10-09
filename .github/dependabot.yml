@@ -13,6 +13,22 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # Blocked on the lint/type toolchain: eslint-plugin-import and
+      # eslint-plugin-react have no ESLint 10 release, @eslint/js 10 needs
+      # eslint 10, and typescript-eslint caps typescript below 6.1. Remove these
+      # once the plugins publish support.
+      - dependency-name: eslint
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@eslint/js'
+        update-types: ['version-update:semver-major']
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      # Types should match the Node runtime (.nvmrc is 24), not the newest Node.
+      - dependency-name: '@types/node'
+        versions: ['>=25']
+      # Exact-pinned prerelease; bump by hand after checking the UI.
+      - dependency-name: '@pantheon-systems/pds-toolkit-react'
     commit-message:
       prefix: chore
       prefix-development: chore

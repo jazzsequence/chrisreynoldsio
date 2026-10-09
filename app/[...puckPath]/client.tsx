@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Data } from "@puckeditor/core";
 import { RenderClient, performLogout, P1_LOGGED_IN_KEY } from "@pantheon-systems/puck-css";
 import config from "../../puck.config";
+import { useLocalStorageFlag } from "../../lib/use-local-storage-flag";
 import { runWidgetLogout } from "./widget-logout";
 
 function EditIcon() {
@@ -34,17 +35,10 @@ function LogoutIcon() {
 }
 
 export function P1EditWidget({ route }: { route: string }) {
-  const [hasToken, setHasToken] = useState(false);
+  const hasToken = useLocalStorageFlag(P1_LOGGED_IN_KEY);
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const flag = typeof localStorage !== "undefined"
-      ? localStorage.getItem(P1_LOGGED_IN_KEY)
-      : null;
-    setHasToken(!!flag);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
