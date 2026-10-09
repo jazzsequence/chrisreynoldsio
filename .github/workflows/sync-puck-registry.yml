@@ -1,0 +1,51 @@
+# Syncs this site's Puck component registry to the backend headlessly on push,
+# without anyone needing to open the editor. Moved from ci-examples/.
+#
+# Requires repo variables CSS_BASE_URL and CSS_SITE_ID (not sensitive) and repo
+# secret CSS_REGISTRY_API_KEY: a sat_ token minted in the P1 dashboard with only
+# "Component registry sync". Do not reuse the read-scoped CSS_API_KEY.
+#
+# The sync script resolves the target branch from the pushed git branch name:
+# the default branch targets the site's main branch; other refs match a site
+# branch by name, and no match is a logged skip (exit 0).
+name: Sync Puck Component Registry
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'puck.config.tsx'
+      - 'components/puck/**'
+  workflow_dispatch:
+    inputs:
+      branch_id:
+        description: 'Branch ID/name to sync against (blank = match the current git branch, else site main)'
+        required: false
+        default: ''
+
+# A branch pushed several times in quick succession only needs its newest
+# component set synced. Without this, every push starts its own run and they
+# race each other into the same registry documents.
+concurrency:
+  group: sync-puck-registry-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Sync component registry
+        run: npm run sync:registry
+        env:
+          CSS_BASE_URL: ${{ vars.CSS_BASE_URL }}
+          CSS_SITE_ID: ${{ vars.CSS_SITE_ID }}
+          CSS_REGISTRY_API_KEY: ${{ secrets.CSS_REGISTRY_API_KEY }}
+          CSS_BRANCH_ID: ${{ github.event.inputs.branch_id || github.ref_name }}
+          CSS_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
