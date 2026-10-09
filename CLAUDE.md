@@ -17,6 +17,13 @@ Node **24** is required (`.nvmrc`). The default Node on this machine is 14; use 
 
 Run lint, tsc, tests and build before committing.
 
+## CI and dependency updates
+
+- `.github/dependabot.yml`: weekly npm + github-actions updates; npm minor/patch are grouped, majors stay individual PRs.
+- `.github/workflows/ci.yml`: lint, typecheck, test, build on PRs and `main`. The build needs no secrets (verified), which matters because Dependabot PRs can't read repo secrets.
+- `.github/workflows/sync-puck-registry.yml`: pushes the Puck registry to P1 when `puck.config.tsx` or `components/puck/**` change. Needs repo variables `CSS_BASE_URL` and `CSS_SITE_ID`, and repo secret `CSS_REGISTRY_API_KEY` (a `sat_` token minted in the P1 dashboard with only "Component registry sync"). Moved from `ci-examples/`.
+- `@pantheon-systems/pds-toolkit-react` is pinned to an exact alpha; review those bumps by hand.
+
 ## Where content lives (important)
 
 - **Code** (blocks, styles, routes) is in this repo and ships through git.
