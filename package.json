@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "start": "next start",
-    "sync:registry": "tsx scripts/sync-puck-registry.ts",
+    "sync:registry": "tsx --tsconfig tsconfig.scripts.json scripts/sync-puck-registry.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "screenshots": "tsx scripts/screenshots.ts"

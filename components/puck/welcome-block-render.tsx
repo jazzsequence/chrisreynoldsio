@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLocalStorageFlag } from "../../lib/use-local-storage-flag";
 import { P1Lockup } from "../p1-lockup";
 import styles from "../welcome-block.module.css";
 
@@ -32,11 +32,7 @@ const LOGGED_IN_DEFAULTS = {
 };
 
 export function WelcomeBlockRender(props: WelcomeBlockRenderProps) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("p1_logged_in"));
-  }, []);
+  const isLoggedIn = useLocalStorageFlag("p1_logged_in");
 
   const activeHeading = isLoggedIn
     ? (props.loggedInHeading || LOGGED_IN_DEFAULTS.heading)
