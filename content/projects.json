@@ -122,7 +122,7 @@
     "slug": "deadpromqueens",
     "title": "Dead Prom Queens",
     "url": "https://deadpromqueens.jazzsequence.com",
-    "description": "Camp-horror deathrock and trash goth post-punk: drum machines and handclaps, fuzzy bass and cheap synth stabs. Fronted by Cilla Hex, with Dead Wren Walking and Ellis Static.",
+    "description": "Another fictional band site, built from a P1 template based on the PARIS site. Fully functioning audio player, bios, press kit, lyrics.",
     "tags": ["P1", "Next.js", "Music"]
   }
 ]
