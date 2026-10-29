@@ -56,7 +56,6 @@ const projects: Project[] = JSON.parse(
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 const context = await browser.newContext({
-  extraHTTPHeaders: TOKEN ? { [TOKEN_HEADER]: TOKEN } : {},
   viewport: VIEWPORT,
   deviceScaleFactor: 1,
   colorScheme: "dark",
@@ -84,6 +83,19 @@ for (const p of projects) {
     continue;
   }
   const page = await context.newPage();
+  if (TOKEN) {
+    // Only the project's own host gets the token. Setting it context-wide (extraHTTPHeaders) also
+    // rides on cross-origin requests such as webfonts from a files./CDN host; a custom header
+    // forces a CORS preflight those hosts reject, so the fonts error out and the shot silently
+    // renders in the fallback face.
+    const host = new URL(p.url).hostname;
+    await page.route("**/*", (route) => {
+      const req = route.request();
+      return new URL(req.url()).hostname === host
+        ? route.continue({ headers: { ...req.headers(), [TOKEN_HEADER]: TOKEN } })
+        : route.continue();
+    });
+  }
   try {
     // "networkidle" never fires on sites with analytics beacons or long-polling, so wait for the
     // DOM and then give the network a bounded chance to settle instead of failing the shot.
