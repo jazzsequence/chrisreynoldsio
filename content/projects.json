@@ -110,5 +110,12 @@
     "url": "https://music.jazzsequence.com",
     "description": "Sometimes I make sounds.",
     "tags": ["Music", "Writing"]
+  },
+  {
+    "slug": "paris",
+    "title": "PARIS",
+    "url": "https://paris.jazzsequence.com",
+    "description": "Tour dates, music, lyrics and the new album Well Enough.",
+    "tags": ["Music", "WordPress"]
   }
 ]
