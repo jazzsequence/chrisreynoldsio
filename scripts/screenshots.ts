@@ -24,7 +24,10 @@ const only = new Set(process.argv.slice(2));
 // Optional: a secret header for sites behind Cloudflare. Add a WAF custom rule on YOUR zone
 // ("header x-screenshot-token equals <secret>" -> action: Skip managed challenge / bot fight)
 // and set SCREENSHOT_TOKEN so this script is let through. We don't try to evade challenges.
+// SCREENSHOT_HEADER overrides the header name, e.g. `x-pantheon-bot-bypass` for the token from
+// `terminus gcdn:bot-bypass <site>` (one token covers every environment on that site).
 const TOKEN = process.env.SCREENSHOT_TOKEN;
+const TOKEN_HEADER = process.env.SCREENSHOT_HEADER || "x-screenshot-token";
 
 // Consent banners: we only ever pick the privacy-preserving choice (reject / necessary only) and
 // never "Accept all". The click only affects this throwaway browser context. A project can set
@@ -53,7 +56,7 @@ const projects: Project[] = JSON.parse(
 await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 const context = await browser.newContext({
-  extraHTTPHeaders: TOKEN ? { "x-screenshot-token": TOKEN } : {},
+  extraHTTPHeaders: TOKEN ? { [TOKEN_HEADER]: TOKEN } : {},
   viewport: VIEWPORT,
   deviceScaleFactor: 1,
   colorScheme: "dark",
@@ -95,6 +98,9 @@ for (const p of projects) {
       throw new Error("bot-check/interstitial page (Cloudflare?), not saving");
     }
     const png = await page.screenshot({ type: "png" });
+    // A flat frame means we caught a pre-paint or interstitial page that the text probe missed.
+    const { channels } = await sharp(png).stats();
+    if (channels.every((c) => c.stdev < 3)) throw new Error("blank screenshot, not saving");
     await sharp(png)
       .resize(960, 600, { fit: "cover", position: "top" })
       .jpeg({ quality: 78, mozjpeg: true })
