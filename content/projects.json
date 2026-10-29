@@ -115,14 +115,14 @@
     "slug": "paris",
     "title": "PARIS",
     "url": "https://paris.jazzsequence.com",
-    "description": "Tour dates, music, lyrics and the new album Well Enough.",
-    "tags": ["Music", "Next.js"]
+    "description": "Band site for a fictional character in a TTRPG. Fully functioning audio player, tour ticket generation, lyric sheets, press kit.",
+    "tags": ["P1", "Next.js", "TTRPG"]
   },
   {
     "slug": "deadpromqueens",
     "title": "Dead Prom Queens",
     "url": "https://deadpromqueens.jazzsequence.com",
     "description": "Camp-horror deathrock and trash goth post-punk: drum machines and handclaps, fuzzy bass and cheap synth stabs. Fronted by Cilla Hex, with Dead Wren Walking and Ellis Static.",
-    "tags": ["Music", "Next.js"]
+    "tags": ["P1", "Next.js", "Music"]
   }
 ]
